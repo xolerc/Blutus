@@ -1,0 +1,59 @@
+# ============================================================
+# docker-compose.yml
+# ============================================================
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: cloudcloner
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: cloner123!
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: postgres
+      REDIS_HOST: redis
+      DEBUG: "True"
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./tools:/app/tools
+      - ./payloads:/var/lib/cloudcloner/payloads
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  celery:
+    build: .
+    command: celery -A app.celery worker --loglevel=info
+    environment:
+      DB_HOST: postgres
+      REDIS_HOST: redis
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./tools:/app/tools
+
+  frontend:
+    image: nginx:alpine
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
+
+volumes:
+  postgres_data:
