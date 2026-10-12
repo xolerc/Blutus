@@ -1,0 +1,11 @@
+
+
+/* === index.html dan ajratildi (XOLERIC SEO) === */
+body { background: #0a0a0f; color: #00ff41; font-family: 'Courier New', monospace; }
+        .glow { text-shadow: 0 0 10px #00ff41; }
+        .scan-line { background: linear-gradient(to right, #00ff41, transparent); height: 2px; }
+        .terminal { background: #000; border: 1px solid #00ff41; border-radius: 4px; padding: 15px; min-height: 300px; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .status-dot.active { background: #00ff41; box-shadow: 0 0 10px #00ff41; }
+        .status-dot.inactive { background: #666; }
+        .status-dot.error { background: #ff0040; }
